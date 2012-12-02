@@ -59,6 +59,31 @@ function diffbuff#diffoff()
     endif
 endfunction
 
+" Diff launchers {{{1
+
+" Diff against the file on disk. Useful for recovery. See also :help DiffOrig
+function diffbuff#diff_saved() "{{{2
+    let old_always = g:itchy_always_split
+    let old_suffix = g:itchy_buffer_suffix
+    let g:itchy_always_split = 2
+    let g:itchy_buffer_suffix = '-Original'
+    silent Scratch .
+    let g:itchy_always_split = old_always
+    let g:itchy_buffer_suffix = old_suffix
+    silent %d
+    silent r #
+    silent 0d_
+    DiffBoth
+endfunction
+
+" Diff the current and last window.
+function diffbuff#diff_both() "{{{2
+    call diffbuff#diff_with_partner(winnr('#'))
+    wincmd p
+    call diffbuff#diff_with_partner(winnr('#'))
+endfunction
+
+
 " Partnered diff windows {{{1
 function diffbuff#diff_with_partner(partner_winnr)
     let w:diffbuff_partner_winnr = a:partner_winnr
@@ -85,3 +110,4 @@ function! diffbuff#partnered_diffoff()
     wincmd p
 endfunction
 
+" vi: et sw=4 ts=4 fdm=marker fmr={{{,}}}
