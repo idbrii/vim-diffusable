@@ -1,4 +1,4 @@
-" Diff arbitrary text
+" Improve diff usablility
 " 
 " See autoload for implementation
 
@@ -13,8 +13,11 @@ elseif exists('g:loaded_diffbuff')
 endif
 let g:loaded_diffbuff = 1
 
+
 " DiffDeletes {{{1
-" Diffs the last two deleted ranges
+" Diffs the last two deleted ranges.
+" Opens a tab to display a diff between the inputs. Quit the diff with q
+" (closes the tab).
 command -nargs=0 DiffDeletes call DiffText(@1, @2)
 
 " Diff two strings. Use @r to pass in register r.

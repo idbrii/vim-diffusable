@@ -1,13 +1,16 @@
-" Diff arbitrary text
-" Opens a tab to display a diff between the inputs. Quit the diff with q
-" (closes the tab).
-
-" Inspiration: http://stackoverflow.com/q/3619146/vimdiff-two-subroutines-in-same-file/#3621806
+" Improve diff usablility
+"
+" Inspiration:
+"   DiffDeletes - http://stackoverflow.com/q/3619146/vimdiff-two-subroutines-in-same-file/#3621806
+"   diffthis and diffoff - https://github.com/tpope/vim-fugitive
 
 if exists('g:autoloaded_diffbuff')
     finish
 endif
 let g:autoloaded_diffbuff = 1
+
+
+" Diff bits of text {{{1
 
 " Diff two strings. Use @r to pass in register r.
 function diffbuff#diff_text(left, right)
@@ -17,7 +20,6 @@ function diffbuff#diff_text(left, right)
     vnew
     call s:CreateBuffer(a:right, ft)
 endfunction
-
 
 " Setup the buffer and add the text
 function s:CreateBuffer(text, ft)
@@ -32,7 +34,10 @@ function s:CreateBuffer(text, ft)
     nmap <buffer> q :tabclose<CR>
 endfunction
 
-" Wrap vim's diff functions to restore state {{{1
+
+" Vim diff command wrappers {{{1
+
+" Store the diff-clobbered settings in a restore command.
 function diffbuff#diffthis()
     if &diff
         return
@@ -49,6 +54,7 @@ function diffbuff#diffthis()
     diffthis
 endfunction
 
+" Remove diff and restore diff-clobbered settings.
 function diffbuff#diffoff()
     autocmd! DiffBuff BufWinLeave <buffer>
     if exists('w:diffbuff_restore')
@@ -85,6 +91,9 @@ endfunction
 
 
 " Partnered diff windows {{{1
+
+" Diff this window and store the partner's window so diffoff can clean both
+" up.
 function diffbuff#diff_with_partner(partner_winnr)
     let w:diffbuff_partner_winnr = a:partner_winnr
     augroup DiffBuff
@@ -94,10 +103,12 @@ function diffbuff#diff_with_partner(partner_winnr)
     call diffbuff#diffthis()
 endfunction
 
+" Clean up diff for this window and its partner.
 function! diffbuff#partnered_diffoff()
     call diffbuff#diffoff()
 
     if !exists('w:diffbuff_partner_winnr') || w:diffbuff_partner_winnr == 0
+        " We have no partner.
         return
     endif
 
