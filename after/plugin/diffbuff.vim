@@ -37,7 +37,7 @@ function <SID>DiffSaved() "{{{2
     let old_always = g:itchy_always_split
     let old_suffix = g:itchy_buffer_suffix
     let g:itchy_always_split = 2
-    let g:itchy_buffer_suffix = 'Original'
+    let g:itchy_buffer_suffix = '-Original'
     silent Scratch .
     let g:itchy_always_split = old_always
     let g:itchy_buffer_suffix = old_suffix
