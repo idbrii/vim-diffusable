@@ -116,7 +116,10 @@ function! diffbuff#partnered_diffoff()
     unlet w:diffbuff_partner_winnr
 
     exec winnr .'wincmd w'
-    unlet w:diffbuff_partner_winnr
+    " TODO: If our partner doesn't know we exist, should we still call
+    " diffoff? Probably doesn't matter unless they're linked to someone else.
+    " TODO: Should we check that our partner's partner is us?
+    unlet! w:diffbuff_partner_winnr
     call diffbuff#diffoff()
     wincmd p
 endfunction
