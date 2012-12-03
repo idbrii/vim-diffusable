@@ -85,7 +85,15 @@ endfunction
 " Diff the current and last window.
 function diffbuff#diff_both() "{{{2
     call diffbuff#diff_with_partner(winnr('#'))
-    wincmd p
+    if winnr('#') == winnr()
+        " If we are our previous window, try jumping to the next window
+        " instead. This case occurs if you open a file, split, open a second
+        " file. We never changed windows, so we have no previous.
+        wincmd w
+    else
+        " Next window please.
+        wincmd p
+    endif
     call diffbuff#diff_with_partner(winnr('#'))
 endfunction
 
