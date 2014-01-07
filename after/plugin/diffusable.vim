@@ -3,16 +3,23 @@
 " See autoload for implementation
 
 if !has("diff")
-    echoerr 'DiffBuff requires diff support'
+    echoerr 'diffusable requires diff support'
     finish
 elseif !exists('itchy_loaded') || exists(':Scratch') != 2
-    echoerr 'DiffBuff requires itchy'
+    echoerr 'diffusable requires itchy'
     finish
 elseif exists('g:loaded_diffusable')
     finish
 endif
 let g:loaded_diffusable = 1
 
+
+" Mappings {{{1
+if !exists("g:diffusable_no_mappings") || !g:diffusable_no_mappings
+    " Find conflict markers
+    nnoremap <silent> ]C /\v^[<>=]{4}($\|\s)<CR>
+    nnoremap <silent> [C ?\v^[<>=]{4}($\|\s)<CR>
+endif
 
 " DiffDeletes {{{1
 " Diffs the last two deleted ranges.
