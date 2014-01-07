@@ -19,7 +19,14 @@ if !exists("g:diffusable_no_mappings") || !g:diffusable_no_mappings
     " Find conflict markers
     nnoremap <silent> ]C /\v^[<>=]{4}($\|\s)<CR>
     nnoremap <silent> [C ?\v^[<>=]{4}($\|\s)<CR>
+
+    " Quick diff update
+    nnoremap <silent> du :call diffusable#updatediff()<CR>
+
+    " undo a change in the previous window - used frequently for diff
+    nnoremap <C-w>u :wincmd p <bar> undo <bar> wincmd p <bar> diffupdate<CR>
 endif
+
 
 " DiffDeletes {{{1
 " Diffs the last two deleted ranges.

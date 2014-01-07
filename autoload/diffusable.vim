@@ -37,6 +37,17 @@ endfunction
 
 " Vim diff command wrappers {{{1
 
+" Quick diff update
+" The error is useful so I don't wonder why nothing happened. (When I forget
+" what the mapping does.)
+function diffusable#updatediff()
+    if &diff
+        diffupdate
+    else
+        echom 'E99: Current buffer is not in diff mode'
+    endif
+endfunction
+
 " Store the diff-clobbered settings in a restore command.
 function diffusable#diffthis()
     if &diff
