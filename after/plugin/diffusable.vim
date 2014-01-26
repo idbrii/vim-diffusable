@@ -17,8 +17,8 @@ let g:loaded_diffusable = 1
 " Mappings {{{1
 if !exists("g:diffusable_no_mappings") || !g:diffusable_no_mappings
     " Find conflict markers
-    nnoremap <silent> ]C /\v^[<>=]{4}($\|\s)<CR>
-    nnoremap <silent> [C ?\v^[<>=]{4}($\|\s)<CR>
+    nnoremap <silent> ]C /\v^[<>=]{4,7}($\|\s)<CR>
+    nnoremap <silent> [C ?\v^[<>=]{4,7}($\|\s)<CR>
 
     " Quick diff update
     nnoremap <silent> du :call diffusable#updatediff()<CR>
