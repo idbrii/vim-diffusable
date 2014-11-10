@@ -20,6 +20,10 @@ if !exists("g:diffusable_no_mappings") || !g:diffusable_no_mappings
     nnoremap <silent> ]C /\v^[<>=]{4,7}($\|\s)<CR>
     nnoremap <silent> [C ?\v^[<>=]{4,7}($\|\s)<CR>
 
+    " Visual mode do and dp
+    xnoremap <unique> <Leader>do :diffget<CR>
+    xnoremap <unique> <Leader>dp :diffput<CR>
+
     " Quick diff update
     nnoremap <silent> du :call diffusable#updatediff()<CR>
 
