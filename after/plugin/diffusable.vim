@@ -15,20 +15,26 @@ let g:loaded_diffusable = 1
 
 
 " Mappings {{{1
+
+" Find conflict markers
+nnoremap <silent> <Plug>(diffusable-next-conflict) /\v^[<>=]{4,7}($\|\s)<CR>
+nnoremap <silent> <Plug>(diffusable-prev-conflict) ?\v^[<>=]{4,7}($\|\s)<CR>
+" Quick diff update
+nnoremap <silent> <Plug>(diffusable-update) :call diffusable#updatediff()<CR>
+" undo a change in the previous window - used frequently for diff
+nnoremap <silent> <Plug>(diffusable-undo-other-win) :wincmd p <bar> undo <bar> wincmd p <bar> diffupdate<CR>
+
 if !exists("g:diffusable_no_mappings") || !g:diffusable_no_mappings
-    " Find conflict markers
-    nnoremap <silent> ]C /\v^[<>=]{4,7}($\|\s)<CR>
-    nnoremap <silent> [C ?\v^[<>=]{4,7}($\|\s)<CR>
+    nmap <unique> ]C <Plug>(diffusable-next-conflict)
+    nmap <unique> [C <Plug>(diffusable-prev-conflict)
 
     " Visual mode do and dp
     xnoremap <unique> <Leader>do :diffget<CR>
     xnoremap <unique> <Leader>dp :diffput<CR>
 
-    " Quick diff update
-    nnoremap <silent> du :call diffusable#updatediff()<CR>
+    nmap <unique> du <Plug>(diffusable-update)
 
-    " undo a change in the previous window - used frequently for diff
-    nnoremap <C-w>u :wincmd p <bar> undo <bar> wincmd p <bar> diffupdate<CR>
+    nmap <unique> <C-w>u <Plug>(diffusable-undo-other-win)
 endif
 
 
