@@ -18,8 +18,8 @@ let g:loaded_diffusable = 1
 
 " Find conflict markers
 " Svn and Perforce use =. Svn uses |.
-nnoremap <silent> <Plug>(diffusable-next-conflict) /\v^[<>=\|]{4,7}($\|\s)<CR>
-nnoremap <silent> <Plug>(diffusable-prev-conflict) ?\v^[<>=\|]{4,7}($\|\s)<CR>
+nnoremap <silent> <Plug>(diffusable-next-conflict) /\v^[<>=\|]{4,7}($\|\s\|\r)<CR>
+nnoremap <silent> <Plug>(diffusable-prev-conflict) ?\v^[<>=\|]{4,7}($\|\s\|\r)<CR>
 " Quick diff update
 nnoremap <silent> <Plug>(diffusable-update) :call diffusable#updatediff()<CR>
 " undo a change in the previous window - used frequently for diff
