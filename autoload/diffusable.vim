@@ -13,7 +13,7 @@ let g:autoloaded_diffusable = 1
 " Diff bits of text {{{1
 
 " Diff two strings. Use @r to pass in register r.
-function diffusable#diff_text(left, right)
+function! diffusable#diff_text(left, right)
     let ft = &ft
     tabnew
     call s:CreateBuffer(a:left, ft)
@@ -36,7 +36,7 @@ function! diffusable#diff_this_against_text(left)
 endfunction
 
 " Setup the buffer and add the text
-function s:CreateBuffer(text, ft)
+function! s:CreateBuffer(text, ft)
     " Don't use a file, since we're for quick comparisons
     setlocal buftype=nofile
     " Use the source file's filetype for syntax highlighting
@@ -54,7 +54,7 @@ endfunction
 " Quick diff update
 " The error is useful so I don't wonder why nothing happened. (When I forget
 " what the mapping does.)
-function diffusable#updatediff()
+function! diffusable#updatediff()
     if &diff
         diffupdate
     else
@@ -63,7 +63,7 @@ function diffusable#updatediff()
 endfunction
 
 " Store the diff-clobbered settings in a restore command.
-function diffusable#diffthis()
+function! diffusable#diffthis()
     if &diff
         return
     endif
@@ -80,7 +80,7 @@ function diffusable#diffthis()
 endfunction
 
 " Remove diff and restore diff-clobbered settings.
-function diffusable#diffoff()
+function! diffusable#diffoff()
     autocmd! DiffBuff BufWinLeave <buffer>
     if exists('w:diffusable_restore')
         execute w:diffusable_restore
@@ -93,7 +93,7 @@ endfunction
 " Diff launchers {{{1
 
 " Diff against the file on disk. Useful for recovery. See also :help DiffOrig
-function diffusable#diff_saved() "{{{2
+function! diffusable#diff_saved() "{{{2
     let old_always = g:itchy_always_split
     let old_suffix = g:itchy_buffer_suffix
     let g:itchy_always_split = 2
@@ -108,7 +108,7 @@ function diffusable#diff_saved() "{{{2
 endfunction
 
 " Diff the current and last window.
-function diffusable#diff_both() "{{{2
+function! diffusable#diff_both() "{{{2
     call diffusable#diff_with_partner(winnr('#'))
     if winnr('#') == winnr()
         " If we are our previous window, try jumping to the next window
@@ -127,7 +127,7 @@ endfunction
 
 " Diff this window and store the partner's window so diffoff can clean both
 " up.
-function diffusable#diff_with_partner(partner_winnr)
+function! diffusable#diff_with_partner(partner_winnr)
     let w:diffusable_partner_winnr = a:partner_winnr
     augroup DiffBuff
         " When the buffer is closed, remove diff from the partner.
