@@ -31,7 +31,7 @@ function s:CreateBuffer(text, ft)
     call setline(1, split(a:text, "\n"))
     call diffusable#diffthis()
     " Quick quit
-    nmap <buffer> q :tabclose<CR>
+    nnoremap <buffer> q :tabclose<CR>
 endfunction
 
 
