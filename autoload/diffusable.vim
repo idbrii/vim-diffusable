@@ -21,6 +21,20 @@ function diffusable#diff_text(left, right)
     call s:CreateBuffer(a:right, ft)
 endfunction
 
+" Diff a string against the current file.
+"
+" Useful for diffing from version control:
+"   call diffusable#diff_this_against_text(system('vcs cat '. expand('%')))
+function! diffusable#diff_this_against_text(left)
+    let ft = &ft
+    vnew
+    call s:CreateBuffer(a:left, ft)
+    " Didn't create a tab, so don't quick close it.
+    unmap <buffer> q
+    " Must use diff both to be partnered.
+    DiffBoth
+endfunction
+
 " Setup the buffer and add the text
 function s:CreateBuffer(text, ft)
     " Don't use a file, since we're for quick comparisons
