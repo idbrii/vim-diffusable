@@ -39,6 +39,9 @@ endfunction
 function! s:CreateBuffer(text, ft)
     " Don't use a file, since we're for quick comparisons
     setlocal buftype=nofile
+    " Once buffer is not visible, forget about it to avoid cluttering the
+    " buffer list and ensure diff is turned off.
+    setlocal bufhidden=delete
     " Use the source file's filetype for syntax highlighting
     let &l:ft = a:ft
     " Paste the data and only the data
