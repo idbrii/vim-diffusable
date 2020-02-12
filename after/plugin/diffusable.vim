@@ -1,14 +1,13 @@
 " Improve diff usablility
 " 
 " See autoload for implementation
-
-if !has("diff")
+if exists('g:loaded_diffusable')
+    finish
+elseif !has("diff")
     echoerr 'diffusable requires diff support'
     finish
 elseif !exists('itchy_loaded') || exists(':Scratch') != 2
     echoerr 'diffusable requires itchy'
-    finish
-elseif exists('g:loaded_diffusable')
     finish
 endif
 let g:loaded_diffusable = 1
@@ -43,10 +42,10 @@ endif
 " Diffs the last two deleted ranges.
 " Opens a tab to display a diff between the inputs. Quit the diff with q
 " (closes the tab).
-command -nargs=0 DiffDeletes call DiffText(@1, @2)
+command! -nargs=0 DiffDeletes call DiffText(@1, @2)
 
 " Diff two strings. Use @r to pass in register r.
-function DiffText(left, right)
+function! DiffText(left, right)
     call diffusable#diff_text(a:left, a:right)
 endfunction
 
