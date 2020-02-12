@@ -9,12 +9,12 @@ elseif !has("diff")
 elseif !exists('*win_execute')
     echoerr 'diffusable requires vim with win_execute()'
     finish
-elseif !exists('itchy_loaded') || exists(':Scratch') != 2
-    echoerr 'diffusable requires itchy'
-    finish
 endif
 let g:loaded_diffusable = 1
 
+if exists(':Scratch') != 2
+    command! Scratch vsplit | setlocal buftype=nofile bufhidden=hide
+endif
 
 " Mappings {{{1
 

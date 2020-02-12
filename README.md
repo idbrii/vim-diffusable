@@ -4,8 +4,11 @@ Quick shortcuts to putting text into a vimdiff.
 
 # Dependencies
 
-Requires [itchy.vim](https://github.com/idbrii/itchy.vim) or another scratch
-plugin providing a `:Scratch` command.
+## :Scratch (optional)
+
+Uses [itchy.vim](https://github.com/idbrii/itchy.vim) or any scratch plugin
+providing a `:Scratch` command if available. Otherwise it defines its own
+`:Scratch` command.
 
 
 # Commands
