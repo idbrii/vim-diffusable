@@ -112,17 +112,25 @@ endfunction
 
 " Diff the current and last window.
 function! diffusable#diff_both() "{{{2
-    call diffusable#diff_with_partner(winnr('#'))
+    let id1 = win_getid()
     if winnr('#') == winnr()
         " If we are our previous window, try jumping to the next window
         " instead. This case occurs if you open a file, split, open a second
         " file. We never changed windows, so we have no previous.
         wincmd w
     else
-        " Next window please.
+        " Back to previous window.
         wincmd p
     endif
-    call diffusable#diff_with_partner(winnr('#'))
+    let id2 = win_getid()
+    if id1 == id2
+        echoerr "Failed to find another window."
+        return
+    endif
+    
+    call diffusable#diff_with_partner(id1)
+    wincmd p
+    call diffusable#diff_with_partner(id2)
 endfunction
 
 
@@ -130,34 +138,33 @@ endfunction
 
 " Diff this window and store the partner's window so diffoff can clean both
 " up.
-function! diffusable#diff_with_partner(partner_winnr)
-    let w:diffusable_partner_winnr = a:partner_winnr
+function! diffusable#diff_with_partner(partner_winid)
+    let w:diffusable_partner_winid = a:partner_winid
     augroup DiffBuff
         " When the buffer is closed, remove diff from the partner.
-        au BufWinLeave <buffer> call diffusable#partnered_diffoff()
+        au BufWinLeave <buffer> call diffusable#partnered_diffoff(s:get_partner_winid_for_bufnr("<abuf>"))
     augroup END
     call diffusable#diffthis()
 endfunction
 
-" Clean up diff for this window and its partner.
-function! diffusable#partnered_diffoff()
-    call diffusable#diffoff()
+function! s:get_partner_winid_for_bufnr(bufnr)
+    return getwinvar(bufwinid(a:bufnr), 'diffusable_partner_winid')
+endf
 
-    if !exists('w:diffusable_partner_winnr') || w:diffusable_partner_winnr == 0
-        " We have no partner.
+" Clean up diff for input window and its partner.
+function! diffusable#partnered_diffoff(partner_winid)
+    let winid = getwinvar(a:partner_winid, 'diffusable_partner_winid', 0)
+    call setwinvar(a:partner_winid, 'diffusable_partner_winid', 0)
+    call win_execute(a:partner_winid, 'call diffusable#diffoff()')
+
+    if winid == 0
+        " We have no partner to cleanup.
         return
     endif
 
-    let winnr = w:diffusable_partner_winnr
-    unlet w:diffusable_partner_winnr
-
-    exec winnr .'wincmd w'
-    " TODO: If our partner doesn't know we exist, should we still call
-    " diffoff? Probably doesn't matter unless they're linked to someone else.
     " TODO: Should we check that our partner's partner is us?
-    unlet! w:diffusable_partner_winnr
-    call diffusable#diffoff()
-    wincmd p
+    call setwinvar(winid, 'diffusable_partner_winid', 0)
+    call win_execute(winid, 'call diffusable#diffoff()')
 endfunction
 
 " vi: et sw=4 ts=4 fdm=marker fmr={{{,}}}

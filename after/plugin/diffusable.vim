@@ -6,6 +6,9 @@ if exists('g:loaded_diffusable')
 elseif !has("diff")
     echoerr 'diffusable requires diff support'
     finish
+elseif !exists('*win_execute')
+    echoerr 'diffusable requires vim with win_execute()'
+    finish
 elseif !exists('itchy_loaded') || exists(':Scratch') != 2
     echoerr 'diffusable requires itchy'
     finish
@@ -55,6 +58,6 @@ command! DiffBoth call diffusable#diff_both()
 " TODO: Make this use diffusable#diffthis or remove
 command! -nargs=1 -complete=file VDiffSp vert diffsplit <q-args>
 command! DiffSaved call diffusable#diff_saved()
-command! DiffOff call diffusable#partnered_diffoff()
+command! DiffOff call diffusable#partnered_diffoff(win_getid())
 
 " vi: et sw=4 ts=4
