@@ -4,15 +4,22 @@
 if exists('g:loaded_diffusable')
     finish
 elseif !has("diff")
-    echoerr 'diffusable requires diff support'
+    if &verbose
+        echoerr 'diffusable requires diff support'
+    endif
     finish
 elseif !exists('*win_execute')
-    echoerr 'diffusable requires vim with win_execute()'
+    if &verbose
+        echoerr 'diffusable requires vim with win_execute()'
+    endif
     finish
 endif
 let g:loaded_diffusable = 1
 
 if exists(':Scratch') != 2
+    if &verbose
+        echoerr 'diffusable is defining its own :Scratch command'
+    endif
     command! Scratch vsplit | setlocal buftype=nofile bufhidden=hide
 endif
 
