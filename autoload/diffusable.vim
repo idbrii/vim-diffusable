@@ -115,8 +115,11 @@ function! diffusable#diff_both() "{{{2
     let id1 = win_getid()
     if winnr('#') == winnr()
         " If we are our previous window, try jumping to the next window
-        " instead. This case occurs if you open a file, split, open a second
-        " file. We never changed windows, so we have no previous.
+        " instead. This case occurs when you close a window -- there's no
+        " previous window. Might happen if you were going to split manually,
+        " but decided to use DiffBoth.
+        " Repro:
+        "   split hello | close | DiffBoth
         wincmd w
     else
         " Back to previous window.
