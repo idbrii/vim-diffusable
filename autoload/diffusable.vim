@@ -31,6 +31,7 @@ function! diffusable#diff_this_against_text(left)
     call s:CreateBuffer(a:left, ft)
     " Didn't create a tab, so don't quick close it.
     unmap <buffer> q
+    wincmd p
     " Must use diff both to be partnered.
     DiffBoth
 endfunction
