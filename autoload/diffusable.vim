@@ -49,7 +49,10 @@ function! s:CreateBuffer(text, ft)
     call setline(1, split(a:text, "\n"))
     call diffusable#diffthis()
     " Quick quit
-    nnoremap <buffer> q :tabclose<CR>
+    if empty(mapcheck('q', 'n'))
+      nnoremap <buffer> <silent> q :<C-U>tabclose<Bar>echohl WarningMsg<Bar>echo ':Gstatus q is deprecated in favor of gq or the built-in <lt>C-W>q'<Bar>echohl NONE<CR>
+    endif
+    nnoremap <buffer> gq :<C-U>tabclose<CR>
 endfunction
 
 
