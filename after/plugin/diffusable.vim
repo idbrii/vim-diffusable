@@ -20,7 +20,7 @@ if exists(':Scratch') != 2
     if &verbose
         echoerr 'diffusable is defining its own :Scratch command'
     endif
-    command! Scratch vsplit | setlocal buftype=nofile bufhidden=hide
+    command! -bar Scratch vsplit | setlocal buftype=nofile bufhidden=hide
 endif
 
 " Mappings {{{1
@@ -52,7 +52,7 @@ endif
 " Diffs the last two deleted ranges.
 " Opens a tab to display a diff between the inputs. Quit the diff with q
 " (closes the tab).
-command! -nargs=0 DiffDeletes call DiffText(@1, @2)
+command! -bar -nargs=0 DiffDeletes call DiffText(@1, @2)
 
 " Diff two strings. Use @r to pass in register r.
 function! DiffText(left, right)
@@ -61,10 +61,10 @@ endfunction
 
 
 " Primary File Diff Commands {{{1
-command! DiffBoth call diffusable#diff_both()
+command! -bar DiffBoth call diffusable#diff_both()
 " TODO: Make this use diffusable#diffthis or remove
-command! -nargs=1 -complete=file VDiffSp vert diffsplit <q-args>
-command! DiffSaved call diffusable#diff_saved()
-command! DiffOff call diffusable#partnered_diffoff(win_getid())
+command! -bar -nargs=1 -complete=file VDiffSp vert diffsplit <q-args>
+command! -bar DiffSaved call diffusable#diff_saved()
+command! -bar DiffOff call diffusable#partnered_diffoff(win_getid())
 
 " vi: et sw=4 ts=4
