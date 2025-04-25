@@ -94,6 +94,40 @@ function! diffusable#diffoff()
     endif
 endfunction
 
+let s:white_opt = {
+            \    'iwhite': 'Ignore changes in amount of white space.',
+            \    'iwhiteall': 'Ignore all white space changes.',
+            \    'iwhiteeol': 'Ignore white space changes at end of line.'
+            \}
+function! diffusable#cycle_ignore_whitespace(force_toggle) abort
+    let matches = split(&diffopt, ',')->filter({ i, v -> v =~# 'iwhite' })
+    let current = ''
+    for opt in matches
+        exec 'set diffopt-='.. opt
+        let current = opt
+    endfor
+
+    let keys = s:white_opt->keys()->sort()
+    let choice = index(keys, current) + 1
+    let choice = choice % (len(keys) + 1)
+
+    if a:force_toggle
+        if empty(current)
+            let choice = index(keys, 'iwhiteall')
+        else
+            let choice = 100
+        endif
+    endif
+    
+    if choice < len(keys)
+        let choice = keys[choice]
+        exec 'set diffopt+='.. choice
+        echo printf("diffopt+=%s: %s", choice, s:white_opt[choice])
+    else
+        echo "diffopt-=iwhite*: Diffing whitespace (ignore disabled)."
+    endif
+endf
+
 " Diff launchers {{{1
 
 " Diff against the file on disk. Useful for recovery. See also :help DiffOrig

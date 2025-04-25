@@ -66,5 +66,7 @@ command! -bar DiffBoth call diffusable#diff_both()
 command! -bar -nargs=1 -complete=file VDiffSp vert diffsplit <q-args>
 command! -bar DiffSaved call diffusable#diff_saved()
 command! -bar DiffOff call diffusable#partnered_diffoff(win_getid())
+command! -bar -bang DiffCycleIgnoreWhitespace call diffusable#cycle_ignore_whitespace(<bang>0)
+
 
 " vi: et sw=4 ts=4

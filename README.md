@@ -36,6 +36,13 @@ preventing accident diffing more than two files because you forgot to turn off
 
 Stop diffing this window and its partner. See `:DiffBoth`.
 
+## :DiffCycleIgnoreWhitespace
+
+Cycle between `diffopt` settings that ignore whitespace (including one that
+excludes all iwhite options).
+
+Use `:DiffCycleIgnoreWhitespace!` bang mode to toggle between diff whitespace
+and ignore all whitespace.
 
 # License
 
