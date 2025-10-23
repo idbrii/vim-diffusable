@@ -128,6 +128,66 @@ function! diffusable#cycle_ignore_whitespace(force_toggle) abort
     endif
 endf
 
+
+" Jump to next line that was modified (but not added or removed).
+function! diffusable#jump_to_modified_line_next()
+    if !&diff
+        return
+    endif
+    let DIFF_CHANGE = hlID('DiffChange')
+    let lnum = line('.')
+    let col_num = col('.')
+    while lnum <= line('$') && diff_hlID(lnum, col_num) >= DIFF_CHANGE
+        let col_num += 1
+        if col_num > len(getline(lnum))
+            let lnum += 1
+            let col_num = 1
+        endif
+    endwhile
+    while lnum <= line('$') && diff_hlID(lnum, col_num) < DIFF_CHANGE
+        let col_num += 1
+        if col_num > len(getline(lnum))
+            let lnum += 1
+            let col_num = 1
+        endif
+    endwhile
+    if diff_hlID(lnum, col_num) >= DIFF_CHANGE
+        call cursor(lnum, col_num)
+    endif
+endfunction
+
+function! diffusable#jump_to_modified_line_prev()
+    let DIFF_CHANGE = hlID('DiffChange')
+    let lnum = line('.')
+    let col_num = col('.')
+    while lnum >= 1 && diff_hlID(lnum, col_num) >= DIFF_CHANGE
+        let col_num -= 1
+        if col_num < 1
+            let lnum -= 1
+            if lnum < 1
+                break
+            endif
+            let col_num = len(getline(lnum))
+        endif
+    endwhile
+    while lnum >= 1 && diff_hlID(lnum, col_num) < DIFF_CHANGE
+        let col_num -= 1
+        if col_num < 1
+            let lnum -= 1
+            if lnum < 1
+                break
+            endif
+            let col_num = len(getline(lnum))
+        endif
+    endwhile
+    if lnum >= 1 && diff_hlID(lnum, col_num) >= DIFF_CHANGE
+        call cursor(lnum, col_num)
+    endif
+endfunction
+
+"~ nnoremap <silent> ]x :call diffusable#jump_to_modified_line_next()<CR>
+"~ nnoremap <silent> [x :call diffusable#jump_to_modified_line_prev()<CR>
+
 " Diff launchers {{{1
 
 " Diff against the file on disk. Useful for recovery. See also :help DiffOrig
