@@ -128,65 +128,88 @@ function! diffusable#cycle_ignore_whitespace(force_toggle) abort
     endif
 endf
 
+" Jump to next line that was modified (but not added or removed). {{{1
+" Skip past DiffText and only stop on DiffChange.
+" https://vi.stackexchange.com/a/46920/2045
+let s:DIFF_CHANGE = [
+            \     hlID("DiffChange"),
+            \     hlID("DiffText"),
+            \     hlID("DiffTextAdd")
+            \ ]
+let s:DIFF_TEXT = [
+            \     hlID("DiffText"),
+            \     hlID("DiffTextAdd")
+            \ ]
 
-" Jump to next line that was modified (but not added or removed).
-function! diffusable#jump_to_modified_line_next()
+function! s:IsDiffType(type, line, col) abort
+    return a:type->index(diff_hlID(a:line, a:col)) != -1
+endf
+
+function! diffusable#jump_to_modified_line_next() abort
     if !&diff
         return
     endif
-    let DIFF_CHANGE = hlID('DiffChange')
-    let lnum = line('.')
-    let col_num = col('.')
-    while lnum <= line('$') && diff_hlID(lnum, col_num) >= DIFF_CHANGE
-        let col_num += 1
-        if col_num > len(getline(lnum))
-            let lnum += 1
-            let col_num = 1
-        endif
-    endwhile
-    while lnum <= line('$') && diff_hlID(lnum, col_num) < DIFF_CHANGE
-        let col_num += 1
-        if col_num > len(getline(lnum))
-            let lnum += 1
-            let col_num = 1
-        endif
-    endwhile
-    if diff_hlID(lnum, col_num) >= DIFF_CHANGE
-        call cursor(lnum, col_num)
-    endif
-endfunction
 
-function! diffusable#jump_to_modified_line_prev()
-    let DIFF_CHANGE = hlID('DiffChange')
-    let lnum = line('.')
-    let col_num = col('.')
-    while lnum >= 1 && diff_hlID(lnum, col_num) >= DIFF_CHANGE
-        let col_num -= 1
-        if col_num < 1
-            let lnum -= 1
-            if lnum < 1
-                break
-            endif
-            let col_num = len(getline(lnum))
+    let line = line('.')
+    let col = col('.')
+    while s:IsDiffType(s:DIFF_TEXT, line, col) && line <= line('$')
+        let col += 1
+        if col > len(getline(line))
+            let line += 1
+            let col = 1
         endif
     endwhile
-    while lnum >= 1 && diff_hlID(lnum, col_num) < DIFF_CHANGE
-        let col_num -= 1
-        if col_num < 1
-            let lnum -= 1
-            if lnum < 1
-                break
-            endif
-            let col_num = len(getline(lnum))
-        endif
-    endwhile
-    if lnum >= 1 && diff_hlID(lnum, col_num) >= DIFF_CHANGE
-        call cursor(lnum, col_num)
-    endif
-endfunction
 
-nnoremap <silent> <Leader>]c :call diffusable#jump_to_modified_line_next()<CR>
-nnoremap <silent> <Leader>[c :call diffusable#jump_to_modified_line_prev()<CR>
+    while !s:IsDiffType(s:DIFF_TEXT, line, col) && line <= line('$')
+        let col += 1
+        if col > len(getline(line))
+            let line += 1
+            let col = 1
+            while !s:IsDiffType(s:DIFF_CHANGE, line, col) && line <= line('$')
+                let line += 1
+            endwhile
+        endif
+    endwhile
+
+    if s:IsDiffType(s:DIFF_TEXT, line, col)
+        call cursor(line, col)
+    endif
+endf
+
+function! diffusable#jump_to_modified_line_prev() abort
+    if !&diff
+        return
+    endif
+
+    let line = line('.')
+    let col = col('.')
+    while s:IsDiffType(s:DIFF_TEXT, line, col) && line >= 1
+        let col -= 1
+        if col < 1
+            let line -= 1
+            let col = len(getline(line))
+        endif
+    endwhile
+
+    while !s:IsDiffType(s:DIFF_TEXT, line, col) && line >= 1
+        let col -= 1
+        if col < 1
+            let line -= 1
+            let col = len(getline(line))
+            while !s:IsDiffType(s:DIFF_CHANGE, line, col) && line >= 1
+                let line -= 1
+                let col = len(getline(line))
+            endwhile
+        endif
+    endwhile
+
+    if s:IsDiffType(s:DIFF_TEXT, line, col)
+        call cursor(line, col)
+    endif
+endf
+
+nnoremap <silent> <Leader>]c <Cmd>call diffusable#jump_to_modified_line_next()<CR>
+nnoremap <silent> <Leader>[c <Cmd>call diffusable#jump_to_modified_line_prev()<CR>
 
 " Diff launchers {{{1
 
