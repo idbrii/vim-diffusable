@@ -185,8 +185,8 @@ function! diffusable#jump_to_modified_line_prev()
     endif
 endfunction
 
-"~ nnoremap <silent> ]x :call diffusable#jump_to_modified_line_next()<CR>
-"~ nnoremap <silent> [x :call diffusable#jump_to_modified_line_prev()<CR>
+nnoremap <silent> <Leader>]c :call diffusable#jump_to_modified_line_next()<CR>
+nnoremap <silent> <Leader>[c :call diffusable#jump_to_modified_line_prev()<CR>
 
 " Diff launchers {{{1
 
