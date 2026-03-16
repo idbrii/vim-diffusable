@@ -208,8 +208,6 @@ function! diffusable#jump_to_modified_line_prev() abort
     endif
 endf
 
-nnoremap <silent> <Leader>]c <Cmd>call diffusable#jump_to_modified_line_next()<CR>
-nnoremap <silent> <Leader>[c <Cmd>call diffusable#jump_to_modified_line_prev()<CR>
 
 " Diff launchers {{{1
 

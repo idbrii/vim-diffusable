@@ -29,6 +29,11 @@ endif
 " Svn and Perforce use =. Svn uses |.
 nnoremap <silent> <Plug>(diffusable-next-conflict) /\v^[<>=\|]{4,7}($\|\s\|\r)<CR>
 nnoremap <silent> <Plug>(diffusable-prev-conflict) ?\v^[<>=\|]{4,7}($\|\s\|\r)<CR>
+
+" Find changes within a line
+nnoremap <silent> <Plug>(diffusable-next-change-within-line) <Cmd>call diffusable#jump_to_modified_line_next()<CR>
+nnoremap <silent> <Plug>(diffusable-prev-change-within-line) <Cmd>call diffusable#jump_to_modified_line_prev()<CR>
+
 " Quick diff update
 nnoremap <silent> <Plug>(diffusable-update) :call diffusable#updatediff()<CR>
 " undo a change in the previous window - used frequently for diff
@@ -37,6 +42,9 @@ nnoremap <silent> <Plug>(diffusable-undo-other-win) :wincmd p <bar> undo <bar> w
 if !exists("g:diffusable_no_mappings") || !g:diffusable_no_mappings
     nmap <unique> ]C <Plug>(diffusable-next-conflict)
     nmap <unique> [C <Plug>(diffusable-prev-conflict)
+
+    nmap <unique> <Leader>]c <Plug>(diffusable-next-change-within-line)
+    nmap <unique> <Leader>[c <Plug>(diffusable-prev-change-within-line)
 
     " Visual mode do and dp
     xnoremap <unique> <Leader>do :diffget<CR>
